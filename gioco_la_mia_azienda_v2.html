@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>La Mia Azienda — ITS Gioco di Ruolo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1B2A;
+  --blue: #1B4F72;
+  --lblue: #D6EAF8;
+  --amber: #E67E22;
+  --lamber: #FDEBD0;
+  --green: #1A7A4A;
+  --lgreen: #D5F5E3;
+  --red: #C0392B;
+  --lred: #FADBD8;
+  --teal: #148F77;
+  --lteal: #D1F2EB;
+  --purple: #6C3483;
+  --lpurp: #E8DAEF;
+  --white: #FFFFFF;
+  --offwht: #F8F9FA;
+  --gray: #95A5A6;
+  --lgray: #ECF0F1;
+  --dark: #1A1A2E;
+  --gold: #F0B429;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ── SPLASH ── */
+#splash {
+  background: linear-gradient(145deg, #0D1B2A 0%, #1B4F72 60%, #0D1B2A 100%);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+#splash::before {
+  content: '';
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(230,126,34,0.2), transparent 70%);
+  top: -80px; right: -80px;
+  animation: pulse 4s ease-in-out infinite;
+}
+#splash::after {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,122,74,0.15), transparent 70%);
+  bottom: -50px; left: -50px;
+  animation: pulse 5s ease-in-out infinite reverse;
+}
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+
+.splash-badge {
+  background: rgba(230,126,34,0.2);
+  border: 1px solid rgba(230,126,34,0.5);
+  border-radius: 20px;
+  padding: 0.3rem 1rem;
+  font-size: 0.75rem;
+  color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+.splash-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+.splash-title span { color: var(--gold); }
+.splash-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+.splash-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.splash-icon {
+  width: 56px; height: 56px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+.btn-primary {
+  background: var(--amber);
+  color: var(--white);
+  border: none;
+  border-radius: 14px;
+  padding: 1rem 2.5rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  max-width: 320px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 20px rgba(230,126,34,0.4);
+}
+.btn-primary:active { transform: scale(0.97); }
+.chapters-preview {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.ch-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+}
+.ch-dot.done { background: var(--gold); }
+
+/* ── CARD SCREEN ── */
+#name-screen {
+  background: var(--offwht);
+  padding: 0;
+}
+.top-bar {
+  background: var(--teal);
+  padding: 1.2rem 1.2rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.top-bar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+  flex: 1;
+}
+.top-bar-step {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.15);
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+}
+.screen-body {
+  flex: 1;
+  padding: 1.4rem;
+  background: var(--offwht);
+  color: var(--dark);
+  overflow-y: auto;
+}
+.screen-body h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--blue);
+  margin-bottom: 0.4rem;
+}
+.screen-body .intro-text {
+  font-size: 0.9rem;
+  color: var(--gray);
+  margin-bottom: 1.4rem;
+  line-height: 1.5;
+}
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+.field-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--dark);
+  background: var(--white);
+  margin-bottom: 1.2rem;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.field-input:focus { outline: none; border-color: var(--blue); }
+
+/* Scelta azienda */
+.azienda-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.4rem;
+}
+.azienda-card {
+  background: var(--white);
+  border: 2px solid #E0E0E0;
+  border-radius: 14px;
+  padding: 0.9rem 0.7rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.azienda-card:active { transform: scale(0.97); }
+.azienda-card.selected {
+  border-color: var(--teal);
+  background: var(--lteal);
+}
+.azienda-card .emoji { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
+.azienda-card .name { font-size: 0.82rem; font-weight: 600; color: var(--dark); }
+.azienda-card .sector { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; }
+
+/* Bottone nav */
+.nav-bar {
+  padding: 1rem 1.4rem;
+  background: var(--white);
+  border-top: 1px solid #eee;
+}
+.btn-nav {
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.15s;
+}
+.btn-nav:active { transform: scale(0.97); }
+.btn-nav.green { background: var(--green); }
+.btn-nav.amber { background: var(--amber); }
+
+/* ── CAPITOLO ── */
+.chapter-screen { background: var(--offwht); }
+
+.progress-bar-wrap {
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+}
+.progress-bar-fill {
+  height: 4px;
+  background: var(--gold);
+  transition: width 0.5s ease;
+}
+
+/* Domanda card */
+.question-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.question-number {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+.question-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--dark);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+.options { display: flex; flex-direction: column; gap: 0.6rem; }
+.option-btn {
+  background: var(--lgray);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  color: var(--dark);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.option-btn .opt-letter {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.option-btn:active { transform: scale(0.98); }
+.option-btn.selected { border-color: var(--blue); background: var(--lblue); }
+.option-btn.correct { border-color: var(--green); background: var(--lgreen); }
+.option-btn.wrong { border-color: var(--red); background: var(--lred); }
+
+/* Feedback */
+.feedback-box {
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  display: none;
+  animation: slideIn 0.3s ease;
+}
+@keyframes slideIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.feedback-box.correct { background: var(--lgreen); color: var(--green); border-left: 4px solid var(--green); }
+.feedback-box.wrong { background: var(--lred); color: var(--red); border-left: 4px solid var(--red); }
+.feedback-box strong { font-weight: 700; }
+
+/* Calcolo interattivo */
+.calc-box {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.calc-box h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  color: var(--blue);
+  margin-bottom: 0.8rem;
+}
+.calc-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+.calc-label { font-size: 0.9rem; color: var(--dark); flex: 1; min-width: 120px; }
+.calc-input {
+  width: 110px;
+  padding: 0.5rem 0.7rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--dark);
+  text-align: right;
+  -webkit-appearance: none;
+}
+.calc-input:focus { outline: none; border-color: var(--blue); }
+.calc-divider { height: 1px; background: #eee; margin: 0.6rem 0; }
+.calc-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--lblue);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  margin-top: 0.6rem;
+}
+.calc-result .label { font-weight: 700; color: var(--blue); font-size: 0.95rem; }
+.calc-result .value { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--blue); }
+.btn-calc {
+  background: var(--teal);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  padding: 0.65rem 1.2rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.8rem;
+  width: 100%;
+}
+
+/* Chapter intro */
+.chapter-intro {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 1.4rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  text-align: center;
+}
+.chapter-intro .ch-emoji { font-size: 3rem; margin-bottom: 0.6rem; }
+.chapter-intro h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--blue);
+  margin-bottom: 0.5rem;
+}
+.chapter-intro p { font-size: 0.9rem; color: var(--gray); line-height: 1.5; }
+
+/* ── RISULTATO FINALE ── */
+#result-screen {
+  background: linear-gradient(145deg, #0D1B2A, #1B4F72);
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 1.4rem;
+  text-align: center;
+  overflow-y: auto;
+}
+.result-badge {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  animation: bounceIn 0.6s cubic-bezier(0.36,0.07,0.19,0.97) both;
+}
+@keyframes bounceIn {
+  0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)}
+}
+.result-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+.result-name { font-size: 1rem; color: rgba(255,255,255,0.7); margin-bottom: 1.5rem; }
+.score-circle {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  border: 4px solid var(--gold);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem;
+  background: rgba(255,255,255,0.05);
+}
+.score-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+}
+.score-den { font-size: 0.85rem; color: var(--gray); }
+.result-stars { font-size: 1.8rem; margin-bottom: 1.2rem; }
+.result-msg {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  max-width: 340px;
+}
+.result-breakdown {
+  background: rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 340px;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-label { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+.breakdown-val { font-size: 0.9rem; font-weight: 700; color: var(--gold); }
+.btn-restart {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--white);
+  border-radius: 12px;
+  padding: 0.85rem 2rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  max-width: 340px;
+}
+
+/* preventivo card */
+.prev-azienda-box {
+  background: var(--lamber);
+  border: 2px solid var(--amber);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--dark);
+}
+.prev-azienda-box strong { color: var(--amber); }
+
+/* info chip */
+.info-chip {
+  background: var(--lteal);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 10px 10px 0;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.82rem;
+  color: var(--dark);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* Chapter header colors */
+.ch1-bar { background: var(--blue); }
+.ch2-bar { background: var(--teal); }
+.ch3-bar { background: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ SPLASH ══════════════════════════ -->
+<div id="splash" class="screen active">
+  <div class="splash-badge">ITS PTO &nbsp; Matematica a blocchi</div>
+  <div class="splash-title">La Mia<br><span>Azienda</span></div>
+  <p class="splash-sub">Gestisci la tua impresa,<br>supera le 3 sfide, diventa imprenditore!</p>
+  <div class="splash-icons">
+    <div class="splash-icon">🏭</div>
+    <div class="splash-icon">💰</div>
+    <div class="splash-icon">📊</div>
+  </div>
+  <div class="chapters-preview">
+    <div class="ch-dot" id="dot1"></div>
+    <div class="ch-dot" id="dot2"></div>
+    <div class="ch-dot" id="dot3"></div>
+  </div>
+  <button class="btn-primary" onclick="showScreen('name-screen')">▶ Inizia il gioco</button>
+  <p style="margin-top:1rem; font-size:0.75rem; color:rgba(255,255,255,0.35);">3 capitoli · ~45 minuti</p>
+</div>
+
+<!-- ══════════════════════════ SETUP ══════════════════════════ -->
+<div id="name-screen" class="screen">
+  <div class="top-bar ch1-bar">
+    <div class="top-bar-title">Scegli la tua azienda</div>
+    <div class="top-bar-step">Setup</div>
+  </div>
+  <div class="screen-body">
+    <h2>Chi sei?</h2>
+    <p class="intro-text">Inserisci il tuo nome e scegli l'azienda che vuoi gestire in questo gioco.</p>
+
+    <div class="field-label">Il tuo nome</div>
+    <input class="field-input" id="player-name" type="text" placeholder="es. Giulia" maxlength="30">
+
+    <div class="field-label">Scegli la tua azienda</div>
+    <div class="azienda-grid">
+      <div class="azienda-card" onclick="selectAzienda(this,'parrucchiera','💇','Parrucchiera','Terziario')">
+        <span class="emoji">💇</span>
+        <div class="name">Parrucchiera</div>
+        <div class="sector">Terziario</div>
+      </div>
+      <div class="azienda-card" onclick="selectAzienda(this,'pizzeria','🍕','Pizzeria','Terziario')">
+        <span class="emoji">🍕</span>
+        <div class="name">Pizzeria</div>
+        <div class="sector">Terziario</div>
+      </div>
+      <div class="azienda-card" onclick="selectAzienda(this,'falegname','🪵','Falegname','Secondario')">
+        <span class="emoji">🪵</span>
+        <div class="name">Falegname</div>
+        <div class="sector">Secondario</div>
+      </div>
+      <div class="azienda-card" onclick="selectAzienda(this,'orto','🥕','Orticoltore','Primario')">
+        <span class="emoji">🥕</span>
+        <div class="name">Orticoltore</div>
+        <div class="sector">Primario</div>
+      </div>
+      <div class="azienda-card" onclick="selectAzienda(this,'informatica','💻','Informatica','Terziario')">
+        <span class="emoji">💻</span>
+        <div class="name">Informatica</div>
+        <div class="sector">Terziario</div>
+      </div>
+      <div class="azienda-card" onclick="selectAzienda(this,'bici','🚲','Riparazione bici','Secondario')">
+        <span class="emoji">🚲</span>
+        <div class="name">Rip. bici</div>
+        <div class="sector">Secondario</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="btn-nav amber" onclick="startGame()">Inizia il Capitolo 1 →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════ CAPITOLO 1 ══════════════════════════ -->
+<div id="ch1-screen" class="screen chapter-screen">
+  <div class="top-bar ch1-bar">
+    <div class="top-bar-title" id="ch1-title">Capitolo 1</div>
+    <div class="top-bar-step" id="ch1-step">1 / 5</div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="ch1-progress" style="width:0%"></div>
+  </div>
+  <div class="screen-body" id="ch1-body"></div>
+  <div class="nav-bar">
+    <button class="btn-nav" id="ch1-btn" onclick="ch1Next()">Avanti →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════ CAPITOLO 2 ══════════════════════════ -->
+<div id="ch2-screen" class="screen chapter-screen">
+  <div class="top-bar ch2-bar">
+    <div class="top-bar-title" id="ch2-title">Capitolo 2</div>
+    <div class="top-bar-step" id="ch2-step">1 / 4</div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="ch2-progress" style="width:0%"></div>
+  </div>
+  <div class="screen-body" id="ch2-body"></div>
+  <div class="nav-bar">
+    <button class="btn-nav green" id="ch2-btn" onclick="ch2Next()">Avanti →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════ CAPITOLO 3 ══════════════════════════ -->
+<div id="ch3-screen" class="screen chapter-screen">
+  <div class="top-bar" style="background:var(--green)">
+    <div class="top-bar-title" id="ch3-title">Capitolo 3</div>
+    <div class="top-bar-step" id="ch3-step">1 / 4</div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="ch3-progress" style="width:0%"></div>
+  </div>
+  <div class="screen-body" id="ch3-body"></div>
+  <div class="nav-bar">
+    <button class="btn-nav" style="background:var(--green)" id="ch3-btn" onclick="ch3Next()">Avanti →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════ RISULTATO ══════════════════════════ -->
+<div id="result-screen" class="screen">
+  <div class="result-badge" id="res-badge">🏆</div>
+  <div class="result-title" id="res-title">Imprenditore!</div>
+  <div class="result-name" id="res-name"></div>
+  <div class="score-circle">
+    <div class="score-num" id="res-score">0</div>
+    <div class="score-den" id="res-den">/ 0 punti</div>
+  </div>
+  <div class="result-stars" id="res-stars">⭐⭐⭐</div>
+  <p class="result-msg" id="res-msg"></p>
+  <div class="result-breakdown" id="res-breakdown"></div>
+  <button class="btn-restart" onclick="restartGame()">↺ Ricomincia con un'altra azienda</button>
+</div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let player = { name: '', azienda: null, emoji: '', aziendaName: '' };
+let score = { ch1: 0, ch2: 0, ch3: 0 };
+let ch1Step = 0, ch2Step = 0, ch3Step = 0;
+let ch3Calc = { uscite: 0, entrate: 0 };
+
+// ─── TUTTI I FEEDBACK (fuori dagli onclick) ───────────────────────────────────
+const FEEDBACKS = {
+  ch1q0: {
+    t: "Esatto! Nel 2023 il settore terziario impiega circa 3'390'000 persone — oltre il 71% dei lavoratori. E' di gran lunga il settore piu' grande.",
+    f: "Non esatto. Il settore terziario e' il piu' grande: occupa circa 3'390'000 persone (oltre il 71%) secondo UST 2023."
+  },
+  ch1q1: {
+    t: "Perfetto! Conosci bene la tua azienda.",
+    f: "Rifletti: il settore primario estrae risorse dalla natura (agricoltura), il secondario trasforma materiali (industria/artigianato), il terziario offre servizi."
+  },
+  ch1q2: {
+    t: "Esatto! Nel 1950 il terziario occupava meno del 40% dei lavoratori. Oggi supera il 71%. Una crescita enorme legata alla globalizzazione e alla tecnologia.",
+    f: "Non corretto. Il terziario e' cresciuto moltissimo: da meno del 40% nel 1950 a oltre il 71% nel 2023."
+  },
+  ch1q3: {
+    t: "Esatto! L'economia domestica (le famiglie) e' uno degli agenti fondamentali del circuito economico. Le famiglie consumano beni prodotti dai diversi settori.",
+    f: "Non esatto. Le casalinghe rappresentano l'economia domestica, cioe' le famiglie — uno dei 4 agenti del circuito economico."
+  },
+  ch1q4: {
+    t: "Ottimo! Hai capito la tendenza storica del tuo settore.",
+    f: "Non esatto. Guarda i dati storici: ogni settore ha avuto un'evoluzione diversa dal 1950 al 2023."
+  },
+  ch2q0: {
+    t: "Perfetto! Sono 4: famiglie, imprese, Stato e banca. Ognuno ha un ruolo specifico nel circuito.",
+    f: "Non esatto. Gli agenti sono 4: famiglie, imprese, Stato e banca. Insieme formano il circuito economico completo."
+  },
+  ch2q1: {
+    t: "Corretto! Il salario e' un flusso di denaro che va dall'impresa alle famiglie (i dipendenti lavoratori).",
+    f: "Non esatto. Il salario va alle famiglie (i lavoratori). Le altre voci sono flussi diversi."
+  },
+  ch2q2: {
+    t: "Esatto! E' il principio fondamentale: ad ogni flusso di denaro corrisponde un flusso opposto di beni o servizi.",
+    f: "Non esatto. Il principio del circuito: denaro in una direzione, beni/servizi nella direzione opposta."
+  },
+  ch2q3: {
+    t: "Corretto! L'affitto e' un'uscita: il denaro esce dalla tua azienda e va verso il proprietario dell'immobile.",
+    f: "Non esatto. Pagare l'affitto e' un'uscita: il denaro esce dalla tua azienda."
+  },
+  ch2q4: {
+    t: "Perfetto! Il pagamento dei clienti e' l'entrata principale della tua azienda. Le altre voci sono uscite.",
+    f: "Non esatto. Le uscite sono cio' che paghi tu (affitto, salari, AVS). L'entrata e' il denaro che ricevi dai clienti."
+  },
+  ch3q0: {
+    t: "Esatto! Un preventivo e' una PREVISIONE: stimi entrate e uscite prima di aprire. E' uno strumento fondamentale per ogni imprenditore.",
+    f: "Non esatto. Un preventivo e' una PREVISIONE di entrate e uscite, non una registrazione del passato ne' una richiesta di prestito."
+  },
+  ch3q3: {
+    t: "Perfetto! Hai interpretato correttamente il risultato.",
+    f: "Non esatto. Guarda il segno del risultato: positivo = utile (entrate > uscite), negativo = perdita (uscite > entrate)."
+  },
+  ch3q4: {
+    t: "Esatto! Con piu' clienti le entrate crescono, mentre le uscite restano uguali. Piccoli aumenti fanno grande differenza.",
+    f: "Non esatto. Calcola: nuove entrate = nuovi clienti x prezzo medio, poi risultato = entrate - uscite (le uscite non cambiano)."
+  },
+};
+
+function getFb(id, isCorrect) {
+  const fb = FEEDBACKS[id];
+  if (!fb) return isCorrect ? "Corretto!" : "Non esatto.";
+  return isCorrect ? fb.t : fb.f;
+}
+
+// ─── AZIENDE DATA ─────────────────────────────────────────────────────────────
+const AZIENDE = {
+  parrucchiera: { nome: 'Parrucchiera', emoji: '💇', settore: 'terziario', settoreLabel: 'Terziario (servizi)', clienti: 60, prezzoMedio: 80, uscite: { salari: 3200, avs: 340, affitto: 600, utenze: 170, materie: 350, assicurazioni: 85 } },
+  pizzeria:     { nome: 'Pizzeria', emoji: '🍕', settore: 'terziario', settoreLabel: 'Terziario (servizi)', clienti: 400, prezzoMedio: 18, uscite: { salari: 3500, avs: 371, affitto: 1800, utenze: 400, materie: 1200, assicurazioni: 120 } },
+  falegname:    { nome: 'Falegname', emoji: '🪵', settore: 'secondario', settoreLabel: 'Secondario (industria / artigianato)', clienti: 15, prezzoMedio: 350, uscite: { salari: 4200, avs: 445, affitto: 500, utenze: 200, materie: 800, assicurazioni: 100 } },
+  orto:         { nome: 'Orticoltore', emoji: '🥕', settore: 'primario', settoreLabel: 'Primario (agricoltura)', clienti: 80, prezzoMedio: 30, uscite: { salari: 2800, avs: 297, affitto: 200, utenze: 180, materie: 400, assicurazioni: 75 } },
+  informatica:  { nome: 'Informatica', emoji: '💻', settore: 'terziario', settoreLabel: 'Terziario (servizi)', clienti: 8, prezzoMedio: 600, uscite: { salari: 5500, avs: 583, affitto: 800, utenze: 100, materie: 150, assicurazioni: 90 } },
+  bici:         { nome: 'Riparazione bici', emoji: '🚲', settore: 'secondario', settoreLabel: 'Secondario (artigianato)', clienti: 30, prezzoMedio: 65, uscite: { salari: 2500, avs: 265, affitto: 350, utenze: 120, materie: 300, assicurazioni: 60 } },
+};
+
+// ─── SETUP ────────────────────────────────────────────────────────────────────
+function selectAzienda(el, key, emoji, name, sector) {
+  document.querySelectorAll('.azienda-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  player.azienda = key; player.emoji = emoji; player.aziendaName = name;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startGame() {
+  player.name = document.getElementById('player-name').value.trim() || 'Studente';
+  if (!player.azienda) { alert("Scegli prima un'azienda!"); return; }
+  ch1Step = 0; renderCh1(); showScreen('ch1-screen');
+}
+
+// ─── RISPOSTA GENERICA (con data-* attributes) ────────────────────────────────
+function answerQuestion(btn) {
+  const id      = btn.dataset.qid;
+  const chosen  = parseInt(btn.dataset.idx);
+  const correct = parseInt(btn.dataset.correct);
+  const chapter = btn.dataset.chapter;
+
+  // Disabilita tutti i bottoni di questa domanda
+  const container = btn.closest('.options');
+  container.querySelectorAll('.option-btn').forEach((b, i) => {
+    b.onclick = null;
+    b.style.pointerEvents = 'none';
+    if (i === correct) b.classList.add('correct');
+    else if (i === chosen) b.classList.add('wrong');
+  });
+
+  // Mostra feedback
+  const fbEl = document.getElementById('fb-' + id);
+  if (fbEl) {
+    const isCorrect = chosen === correct;
+    fbEl.textContent = getFb(id, isCorrect);
+    fbEl.className = 'feedback-box ' + (isCorrect ? 'correct' : 'wrong');
+    fbEl.style.display = 'block';
+    if (isCorrect) score[chapter]++;
+  }
+}
+
+function renderOpts(opts, correct, id, chapter) {
+  const letters = ['A','B','C','D'];
+  return opts.map((o, i) => `
+    <button class="option-btn"
+      data-qid="${id}" data-idx="${i}" data-correct="${correct}" data-chapter="${chapter}"
+      onclick="answerQuestion(this)">
+      <span class="opt-letter">${letters[i]}</span> ${o}
+    </button>`).join('');
+}
+
+// ─── CAPITOLO 1 ───────────────────────────────────────────────────────────────
+const CH1_STEPS = 5;
+
+function renderCh1() {
+  const az = AZIENDE[player.azienda];
+  const body = document.getElementById('ch1-body');
+  document.getElementById('ch1-step').textContent = `${ch1Step+1} / ${CH1_STEPS}`;
+  document.getElementById('ch1-progress').style.width = `${(ch1Step/CH1_STEPS)*100}%`;
+  document.getElementById('ch1-title').textContent = 'Capitolo 1 — I Settori Economici';
+  document.getElementById('ch1-btn').textContent = ch1Step === CH1_STEPS-1 ? 'Capitolo 2 →' : 'Avanti →';
+
+  if (ch1Step === 0) {
+    body.innerHTML = `
+      <div class="chapter-intro">
+        <div class="ch-emoji">📊</div>
+        <h2>Capitolo 1<br>I Settori Economici</h2>
+        <p>Scopri in quale settore opera la tua ${az.emoji} ${az.nome} e cosa significa per il circuito economico svizzero.</p>
+      </div>
+      <div class="info-chip">La tua azienda: <strong>${az.emoji} ${az.nome}</strong> — Settore: <strong>${az.settoreLabel}</strong></div>
+      <div class="question-card">
+        <div class="question-number">Domanda 1 / 5</div>
+        <div class="question-text">In Svizzera, quante persone lavorano nel settore terziario (servizi) secondo i dati UST 2023?</div>
+        <div class="options">
+          ${renderOpts(["Circa 1'200'000","Circa 3'400'000","Circa 500'000","Circa 5'000'000"],1,'ch1q0','ch1')}
+        </div>
+        <div class="feedback-box" id="fb-ch1q0"></div>
+      </div>`;
+
+  } else if (ch1Step === 1) {
+    const correct = az.settore === 'primario' ? 0 : az.settore === 'secondario' ? 1 : 2;
+    body.innerHTML = `
+      <div class="info-chip">I tre settori: <strong>Primario</strong> (agricoltura) · <strong>Secondario</strong> (industria/artigianato) · <strong>Terziario</strong> (servizi)</div>
+      <div class="question-card">
+        <div class="question-number">Domanda 2 / 5</div>
+        <div class="question-text">La tua ${az.emoji} ${az.nome} appartiene al settore...</div>
+        <div class="options">
+          ${renderOpts(['Primario','Secondario','Terziario'],correct,'ch1q1','ch1')}
+        </div>
+        <div class="feedback-box" id="fb-ch1q1"></div>
+      </div>`;
+
+  } else if (ch1Step === 2) {
+    body.innerHTML = `
+      <div class="question-card">
+        <div class="question-number">Domanda 3 / 5</div>
+        <div class="question-text">Il settore terziario in Svizzera e' cresciuto dal 1950 al 2023. Quale affermazione e' corretta?</div>
+        <div class="options">
+          ${renderOpts([
+            "Era il settore piu' grande gia' nel 1950",
+            "E' rimasto stabile al 50%",
+            "E' cresciuto enormemente: oggi occupa oltre il 70% dei lavoratori",
+            "E' scomparso con l'automazione"
+          ],2,'ch1q2','ch1')}
+        </div>
+        <div class="feedback-box" id="fb-ch1q2"></div>
+      </div>`;
+
+  } else if (ch1Step === 3) {
+    body.innerHTML = `
+      <div class="question-card">
+        <div class="question-number">Domanda 4 / 5</div>
+        <div class="question-text">Un orticoltore vende verdure a una famiglia. Questo e' uno scambio tra settore primario e...</div>
+        <div class="options">
+          ${renderOpts([
+            "Settore secondario (industria)",
+            "Economia domestica (famiglia)",
+            "Settore terziario (banca)",
+            "Stato (governo)"
+          ],1,'ch1q3','ch1')}
+        </div>
+        <div class="feedback-box" id="fb-ch1q3"></div>
+      </div>`;
+
+  } else if (ch1Step === 4) {
+    const pct = az.settore === 'primario' ? '3,2%' : az.settore === 'secondario' ? '24,9%' : '71,9%';
+    const optsP = ["In forte crescita (+200%)", "In calo (dal 30% al 3%)", "Stabile al 30%", "E' scomparso"];
+    const optsS = ["In forte crescita (+100%)", "Stabile al 50%", "In calo (era oltre il 40% nel 1950)", "E' scomparso"];
+    const optsT = ["In forte crescita (era meno del 40% nel 1950)", "In calo dal 70%", "Stabile al 50%", "E' il settore piu' piccolo"];
+    const opts   = az.settore === 'primario' ? optsP : az.settore === 'secondario' ? optsS : optsT;
+    const corr   = az.settore === 'primario' ? 1 : az.settore === 'secondario' ? 2 : 0;
+    body.innerHTML = `
+      <div class="question-card">
+        <div class="question-number">Domanda 5 / 5</div>
+        <div class="question-text">Nel 2023 il settore ${az.settoreLabel.split(' ')[0].toLowerCase()} occupa circa il ${pct} dei lavoratori svizzeri. Rispetto al 1950, questo settore e'...</div>
+        <div class="options">${renderOpts(opts,corr,'ch1q4','ch1')}</div>
+        <div class="feedback-box" id="fb-ch1q4"></div>
+      </div>`;
+  }
+}
+
+function ch1Next() {
+  ch1Step++;
+  if (ch1Step >= CH1_STEPS) {
+    ch2Step = 0; renderCh2(); showScreen('ch2-screen');
+    document.getElementById('dot1').classList.add('done');
+    return;
+  }
+  renderCh1(); window.scrollTo(0,0);
+}
+
+// ─── CAPITOLO 2 ───────────────────────────────────────────────────────────────
+const CH2_STEPS = 5;
+
+function renderCh2() {
+  const az = AZIENDE[player.azienda];
+  const body = document.getElementById('ch2-body');
+  document.getElementById('ch2-step').textContent = `${ch2Step+1} / ${CH2_STEPS}`;
+  document.getElementById('ch2-progress').style.width = `${(ch2Step/CH2_STEPS)*100}%`;
+  document.getElementById('ch2-title').textContent = 'Capitolo 2 — Il Circuito Economico';
+  document.getElementById('ch2-btn').textContent = ch2Step === CH2_STEPS-1 ? 'Capitolo 3 →' : 'Avanti →';
+
+  if (ch2Step === 0) {
+    body.innerHTML = `
+      <div class="chapter-intro">
+        <div class="ch-emoji">🔄</div>
+        <h2>Capitolo 2<br>Il Circuito Economico</h2>
+        <p>Ogni azienda scambia beni, servizi e denaro con altri soggetti. Scopri i flussi della tua ${az.emoji} ${az.nome}.</p>
+      </div>
+      <div class="question-card">
+        <div class="question-number">Domanda 1 / 5</div>
+        <div class="question-text">Quanti sono gli agenti del circuito economico?</div>
+        <div class="options">
+          ${renderOpts(['2 (famiglie e imprese)','3 (famiglie, imprese, Stato)','4 (famiglie, imprese, Stato e banca)','5 (famiglie, imprese, Stato, banca e ONG)'],2,'ch2q0','ch2')}
+        </div>
+        <div class="feedback-box" id="fb-ch2q0"></div>
+      </div>`;
+
+  } else if (ch2Step === 1) {
+    body.innerHTML = `
+      <div class="question-card">
+        <div class="question-number">Domanda 2 / 5</div>
+        <div class="question-text">La tua ${az.emoji} ${az.nome} paga i salari ai dipendenti. Questo flusso di denaro va dalla tua azienda verso...</div>
+        <div class="options">
+          ${renderOpts(['Lo Stato (imposte)','Le famiglie (lavoratori)','La banca (interessi)','I fornitori (materie prime)'],1,'ch2q1','ch2')}
+        </div>
+        <div class="feedback-box" id="fb-ch2q1"></div>
+      </div>`;
+
+  } else if (ch2Step === 2) {
+    body.innerHTML = `
+      <div class="question-card">
+        <div class="question-number">Domanda 3 / 5</div>
+        <div class="question-text">Nel circuito economico ogni scambio ha sempre due flussi. Se la tua azienda riceve denaro dai clienti, cosa va nella direzione opposta verso i clienti?</div>
+        <div class="options">
+          ${renderOpts(['Altro denaro (cambio)','Beni o servizi della tua azienda','Salari','Contributi AVS'],1,'ch2q2','ch2')}
+        </div>
+        <div class="feedback-box" id="fb-ch2q2"></div>
+      </div>`;
+
+  } else if (ch2Step === 3) {
+    body.innerHTML = `
+      <div class="info-chip">→ = uscita di denaro (paghi tu) · ← = entrata di denaro (ricevi tu)</div>
+      <div class="question-card">
+        <div class="question-number">Domanda 4 / 5</div>
+        <div class="question-text">La tua ${az.emoji} ${az.nome} paga l'affitto del locale. Questo e' un flusso...</div>
+        <div class="options">
+          ${renderOpts([
+            'Entrata: ricevi l affitto',
+            'Uscita: paghi l affitto',
+            'Pareggio: si annullano',
+            'Nessun flusso: l affitto non esiste'
+          ],1,'ch2q3','ch2')}
+        </div>
+        <div class="feedback-box" id="fb-ch2q3"></div>
+      </div>`;
+
+  } else if (ch2Step === 4) {
+    body.innerHTML = `
+      <div class="info-chip">Ricapitolo: quali flussi conosci?</div>
+      <div class="question-card">
+        <div class="question-number">Domanda 5 / 5</div>
+        <div class="question-text">Quale di questi e' un'ENTRATA per la tua ${az.emoji} ${az.nome}?</div>
+        <div class="options">
+          ${renderOpts([
+            'Il pagamento dei contributi AVS allo Stato',
+            'Il pagamento dell affitto al proprietario',
+            'Il pagamento dei clienti per i tuoi prodotti/servizi',
+            'Il pagamento dei salari ai dipendenti'
+          ],2,'ch2q4','ch2')}
+        </div>
+        <div class="feedback-box" id="fb-ch2q4"></div>
+      </div>`;
+  }
+}
+
+function ch2Next() {
+  ch2Step++;
+  if (ch2Step >= CH2_STEPS) {
+    ch3Step = 0; ch3Calc = { uscite: 0, entrate: 0 };
+    renderCh3(); showScreen('ch3-screen');
+    document.getElementById('dot2').classList.add('done');
+    return;
+  }
+  renderCh2(); window.scrollTo(0,0);
+}
+
+// ─── CAPITOLO 3 ───────────────────────────────────────────────────────────────
+const CH3_STEPS = 5;
+
+function renderCh3() {
+  const az = AZIENDE[player.azienda];
+  const body = document.getElementById('ch3-body');
+  document.getElementById('ch3-step').textContent = `${ch3Step+1} / ${CH3_STEPS}`;
+  document.getElementById('ch3-progress').style.width = `${(ch3Step/CH3_STEPS)*100}%`;
+  document.getElementById('ch3-title').textContent = 'Capitolo 3 — Il Preventivo';
+  document.getElementById('ch3-btn').textContent = ch3Step === CH3_STEPS-1 ? 'Vedi il risultato!' : 'Avanti →';
+
+  const u = az.uscite;
+  const totU = u.salari+u.avs+u.affitto+u.utenze+u.materie+u.assicurazioni;
+  const totE = az.clienti * az.prezzoMedio;
+  const ris  = totE - totU;
+
+  if (ch3Step === 0) {
+    body.innerHTML = `
+      <div class="chapter-intro">
+        <div class="ch-emoji">💰</div>
+        <h2>Capitolo 3<br>Il Preventivo</h2>
+        <p>Costruisci il preventivo mensile della tua ${az.emoji} ${az.nome}. Calcola uscite, entrate e risultato!</p>
+      </div>
+      <div class="prev-azienda-box">
+        <strong>${az.emoji} ${az.nome}</strong><br>
+        Clienti stimati: <strong>${az.clienti}</strong> al mese<br>
+        Prezzo medio: <strong>CHF ${az.prezzoMedio}</strong>
+      </div>
+      <div class="question-card">
+        <div class="question-number">Domanda 1 / 4</div>
+        <div class="question-text">Un preventivo serve per...</div>
+        <div class="options">
+          ${renderOpts([
+            'Calcolare quante tasse devo pagare',
+            'Prevedere entrate e uscite prima di aprire l azienda',
+            'Registrare quello che e gia successo',
+            'Chiedere un prestito alla banca'
+          ],1,'ch3q0','ch3')}
+        </div>
+        <div class="feedback-box" id="fb-ch3q0"></div>
+      </div>`;
+
+  } else if (ch3Step === 1) {
+    body.innerHTML = `
+      <div class="calc-box">
+        <h3>Calcola le USCITE mensili della tua ${az.emoji} ${az.nome}</h3>
+        <div class="info-chip">I valori sono pre-compilati. Puoi modificarli se vuoi.</div>
+        <div class="calc-row"><span class="calc-label">Salari</span><input class="calc-input" id="inp-salari" type="number" value="${u.salari}"></div>
+        <div class="calc-row"><span class="calc-label">AVS (~10,6%)</span><input class="calc-input" id="inp-avs" type="number" value="${u.avs}"></div>
+        <div class="calc-divider"></div>
+        <div class="calc-row"><span class="calc-label">Affitto</span><input class="calc-input" id="inp-affitto" type="number" value="${u.affitto}"></div>
+        <div class="calc-row"><span class="calc-label">Utenze</span><input class="calc-input" id="inp-utenze" type="number" value="${u.utenze}"></div>
+        <div class="calc-divider"></div>
+        <div class="calc-row"><span class="calc-label">Materie prime</span><input class="calc-input" id="inp-materie" type="number" value="${u.materie}"></div>
+        <div class="calc-row"><span class="calc-label">Assicurazioni</span><input class="calc-input" id="inp-assicurazioni" type="number" value="${u.assicurazioni}"></div>
+        <div class="calc-divider"></div>
+        <button class="btn-calc" onclick="calcolaUscite()">Calcola totale uscite</button>
+        <div class="calc-result" id="tot-uscite" style="display:none">
+          <span class="label">Totale uscite</span>
+          <span class="value" id="tot-uscite-val">CHF 0</span>
+        </div>
+      </div>`;
+
+  } else if (ch3Step === 2) {
+    body.innerHTML = `
+      <div class="calc-box">
+        <h3>Calcola le ENTRATE mensili</h3>
+        <div class="info-chip">Formula: Entrate = numero clienti x prezzo medio</div>
+        <div class="calc-row"><span class="calc-label">N. clienti / mese</span><input class="calc-input" id="inp-clienti" type="number" value="${az.clienti}"></div>
+        <div class="calc-row"><span class="calc-label">Prezzo medio (CHF)</span><input class="calc-input" id="inp-prezzo" type="number" value="${az.prezzoMedio}"></div>
+        <button class="btn-calc" onclick="calcolaEntrate()">Calcola entrate</button>
+        <div class="calc-result" id="tot-entrate" style="display:none">
+          <span class="label">Totale entrate</span>
+          <span class="value" id="tot-entrate-val">CHF 0</span>
+        </div>
+      </div>`;
+
+  } else if (ch3Step === 3) {
+    const u2 = ch3Calc.uscite || totU;
+    const e2 = ch3Calc.entrate || totE;
+    const r2 = e2 - u2;
+    const isUtile = r2 >= 0;
+    const optsU = [
+      "L azienda e in perdita e deve chiudere",
+      "L azienda guadagna: le entrate superano le uscite",
+      "L azienda e al pareggio esatto",
+      "I conti sono sbagliati"
+    ];
+    const optsP = [
+      "L azienda guadagna moltissimo",
+      "L azienda e al pareggio",
+      "L azienda spende piu di quello che guadagna: bisogna cambiare qualcosa",
+      "Non importa, e normale"
+    ];
+    body.innerHTML = `
+      <div class="calc-box">
+        <h3>Il risultato finale</h3>
+        <div class="calc-result" style="margin-bottom:0.8rem;background:var(--lgreen)">
+          <span class="label" style="color:var(--green)">Entrate</span>
+          <span class="value" style="color:var(--green)">CHF ${fmt(e2)}</span>
+        </div>
+        <div class="calc-result" style="margin-bottom:0.8rem;background:var(--lred)">
+          <span class="label" style="color:var(--red)">Uscite</span>
+          <span class="value" style="color:var(--red)">CHF ${fmt(u2)}</span>
+        </div>
+        <div class="calc-result" style="background:${isUtile?'var(--lgreen)':'var(--lred)'};border:2px solid ${isUtile?'var(--green)':'var(--red)'}">
+          <span class="label" style="color:${isUtile?'var(--green)':'var(--red)'}">Risultato</span>
+          <span class="value" style="color:${isUtile?'var(--green)':'var(--red)'}">CHF ${r2>=0?'+':''}${fmt(r2)}</span>
+        </div>
+      </div>
+      <div class="question-card">
+        <div class="question-number">Domanda 3 / 4</div>
+        <div class="question-text">Il risultato e' ${isUtile ? 'positivo (utile)' : 'negativo (perdita)'}. Questo significa che...</div>
+        <div class="options">${renderOpts(isUtile ? optsU : optsP, isUtile ? 1 : 2, 'ch3q3','ch3')}</div>
+        <div class="feedback-box" id="fb-ch3q3"></div>
+      </div>`;
+
+  } else if (ch3Step === 4) {
+    const u2 = ch3Calc.uscite || totU;
+    const e2 = ch3Calc.entrate || totE;
+    const newClienti = Math.round(az.clienti * 1.2);
+    const newEntrate = newClienti * az.prezzoMedio;
+    const newRis = newEntrate - u2;
+    body.innerHTML = `
+      <div class="question-card">
+        <div class="question-number">Domanda 4 / 4 — Sfida bonus!</div>
+        <div class="question-text">Se i clienti aumentassero del 20% (da ${az.clienti} a ${newClienti}), le nuove entrate sarebbero CHF ${fmt(newEntrate)}. Il nuovo risultato sarebbe...</div>
+        <div class="options">
+          ${renderOpts([
+            "CHF " + fmt(newRis + 1000) + " (utile enorme)",
+            "CHF " + fmt(newRis) + " (" + (newRis>=0?"utile":"ancora perdita") + ")",
+            "CHF " + fmt(e2) + " (uguale a prima)",
+            "CHF " + fmt(newRis - 2000) + " (perdita maggiore)"
+          ],1,'ch3q4','ch3')}
+        </div>
+        <div class="feedback-box" id="fb-ch3q4"></div>
+      </div>`;
+  }
+}
+
+function calcolaUscite() {
+  const tot = ['salari','avs','affitto','utenze','materie','assicurazioni']
+    .reduce((s,k) => s + (parseFloat(document.getElementById('inp-'+k).value)||0), 0);
+  ch3Calc.uscite = tot;
+  const el = document.getElementById('tot-uscite');
+  if (el) { el.style.display='flex'; document.getElementById('tot-uscite-val').textContent='CHF '+fmt(tot); }
+}
+
+function calcolaEntrate() {
+  const c = parseFloat(document.getElementById('inp-clienti').value)||0;
+  const p = parseFloat(document.getElementById('inp-prezzo').value)||0;
+  const tot = c * p;
+  ch3Calc.entrate = tot;
+  const el = document.getElementById('tot-entrate');
+  if (el) { el.style.display='flex'; document.getElementById('tot-entrate-val').textContent='CHF '+fmt(tot); }
+}
+
+function ch3Next() {
+  ch3Step++;
+  if (ch3Step >= CH3_STEPS) { showResult(); return; }
+  renderCh3(); window.scrollTo(0,0);
+}
+
+// ─── RISULTATO FINALE ─────────────────────────────────────────────────────────
+function showResult() {
+  const az = AZIENDE[player.azienda];
+  const total = 13;
+  const tot = score.ch1 + score.ch2 + score.ch3;
+  const pct = (tot / total) * 100;
+
+  let badge, title, msg, stars;
+  if (pct >= 80) {
+    badge='🏆'; title='Imprenditore!'; stars='⭐⭐⭐';
+    msg=`Eccellente, ${player.name}! Conosci i settori economici, il circuito e sai costruire un preventivo. La tua ${az.emoji} ${az.nome} e' in buone mani!`;
+  } else if (pct >= 55) {
+    badge='🥈'; title='Bravo!'; stars='⭐⭐';
+    msg=`Buon lavoro, ${player.name}! Hai capito i concetti principali. Ripassando i punti mancanti diventerai un imprenditore ancora piu' solido.`;
+  } else {
+    badge='📚'; title='In crescita!'; stars='⭐';
+    msg=`Ci sei quasi, ${player.name}! Rileggi le schede delle attivita' 1, 2 e 3 e riprova.`;
+  }
+
+  document.getElementById('res-badge').textContent = badge;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-name').textContent = `${az.emoji} ${az.nome} · ${player.name}`;
+  document.getElementById('res-score').textContent = tot;
+  document.getElementById('res-den').textContent = `/ ${total} punti`;
+  document.getElementById('res-stars').textContent = stars;
+  document.getElementById('res-msg').textContent = msg;
+  document.getElementById('res-breakdown').innerHTML = `
+    <div class="breakdown-row"><span class="breakdown-label">Settori economici</span><span class="breakdown-val">${score.ch1} / 5</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Circuito economico</span><span class="breakdown-val">${score.ch2} / 5</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Il preventivo</span><span class="breakdown-val">${score.ch3} / 3</span></div>
+  `;
+  document.getElementById('dot3').classList.add('done');
+  showScreen('result-screen');
+}
+
+function fmt(n) {
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+}
+
+function restartGame() {
+  score = { ch1:0, ch2:0, ch3:0 };
+  ch1Step=0; ch2Step=0; ch3Step=0;
+  player = { name:'', azienda:null, emoji:'', aziendaName:'' };
+  ch3Calc = { uscite:0, entrate:0 };
+  ['dot1','dot2','dot3'].forEach(d => document.getElementById(d).classList.remove('done'));
+  document.querySelectorAll('.azienda-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('player-name').value = '';
+  showScreen('splash');
+}
+</script>
